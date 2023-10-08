@@ -30,6 +30,7 @@ namespace CookAlongAcademy.Controllers
             return View(model);  // Returns the Dashboard view with the model
         }
 
+
         public IActionResult Index()
         {
             return View();

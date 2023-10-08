@@ -3,7 +3,7 @@
     public class Submission
     {
         public int SubmissionID { get; set; }
-        public int UserID { get; set; }
+        public int UserID { get; set; } // StudentId
         public int RecipeID { get; set; }
         public string? SubmissionImage { get; set; }  // Consider using a more complex type to handle images
         public string? Notes { get; set; }
