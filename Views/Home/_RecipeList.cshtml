@@ -1,0 +1,27 @@
+﻿@model IEnumerable<CookAlongAcademy.Models.Recipe>
+
+<h2>Your Recipes</h2>
+<!-- Display the list of recipes -->
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var recipe in Model)
+        {
+            <li>@recipe.Title</li>
+            <!-- Other details can be listed here -->
+        }
+    </ul>
+}
+else
+{
+    <p>No recipes found.</p>
+}
+
+<h2>Upload Recipe Text File</h2>
+<form asp-controller="Recipe" asp-action="UploadRecipe" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="fileUpload" class="form-label">Select a text file:</label>
+        <input class="form-control" type="file" id="fileUpload" name="file" accept=".txt" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>

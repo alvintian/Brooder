@@ -18,24 +18,21 @@ namespace CookAlongAcademy.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        [HttpPost]
+        public async Task<IActionResult> UploadRecipe(IFormFile file)
         {
             if (file != null && file.Length > 0)
             {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName);
+                // The file upload logic here...
 
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-
-                // Process the file as needed for your application
-
-                return RedirectToAction("RecipeList");
+                // After uploading, you might want to redirect to the Dashboard view
+                return RedirectToAction("Dashboard", "Home");
             }
 
-            return View("RecipeList", await GetRecipesAsync());
+            // Handle the case where the file is not uploaded
+            return RedirectToAction("Dashboard", "Home");
         }
+
 
         // Implement this method according to your data access logic
         private async Task<IEnumerable<Recipe>> GetRecipesAsync()

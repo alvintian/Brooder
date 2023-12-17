@@ -30,25 +30,9 @@
 
             <!-- Add more dashboard widgets here -->
 
-            <div class="my-4">
-                <h2>Your Recipes</h2>
-                <!-- Recipes list -->
-                <div>
-                    @if (Model.Recipes != null && Model.Recipes.Any())
-                    {
-                        <ul>
-                            @foreach (var recipe in Model.Recipes)
-                            {
-                                <li>@recipe.Title</li>
-                            }
-                        </ul>
-                    }
-                    else
-                    {
-                        <p>No recipes found.</p>
-                    }
-                </div>
-            </div>
+            <!-- Render the RecipeList partial view here -->
+            <partial name="_RecipeList" model="Model.Recipes" />
+            <!-- Additional content can be added here -->
         </main>
     </div>
 </div>
