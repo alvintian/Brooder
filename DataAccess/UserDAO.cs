@@ -1,44 +1,35 @@
 ﻿using CookAlongAcademy.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace CookAlongAcademy.DataAccess
 {
     public class UserDAO
     {
-        // If you're using a database, you might need a connection string or a context object here
+        private readonly ApplicationDbContext _context;
 
-        public User GetUserByID(int userID)
+        public UserDAO(ApplicationDbContext context)
         {
-            // Implement logic to get user by ID
-            // You should connect to your database and fetch the user with the given ID
-            // The following is a placeholder, replace with actual database operations
-            User? user = null;  // Replace with actual user retrieval code
-            return user;
+            _context = context;
         }
 
-        public User GetUserByUsernameAndPassword(string username, string password)
+        public async Task<ApplicationUser?> GetUserByID(string userID)
         {
-            // Implement logic to get user by username and password
-            // The following is a placeholder, replace with actual database operations
-            User? user = null;  // Replace with actual user retrieval code
-            return user;
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == userID);
         }
 
-        public bool SaveUser(User user)
+        // Remove GetUserByUsernameAndPassword and use Identity's SignInManager
+
+        public async Task<bool> SaveUser(ApplicationUser user)
         {
-            // Implement logic to save user to the database
-            // The following is a placeholder, replace with actual database operations
-            bool isSaved = false;  // Replace with actual save operation code
-            return isSaved;
+            _context.Users.Add(user);
+            return await _context.SaveChangesAsync() > 0;
         }
 
-        public bool UpdateUser(User user)
+        public async Task<bool> UpdateUser(ApplicationUser user)
         {
-            // Implement logic to update user in the database
-            // The following is a placeholder, replace with actual database operations
-            bool isUpdated = false;  // Replace with actual update operation code
-            return isUpdated;
+            _context.Users.Update(user);
+            return await _context.SaveChangesAsync() > 0;
         }
     }
-
-
 }

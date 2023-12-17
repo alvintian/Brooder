@@ -3,22 +3,28 @@ using CookAlongAcademy.Models;
 using Microsoft.AspNetCore.Identity;
 using CookAlongAcademy.Controllers;
 
-public class AccountController : Controller
+public class UserController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly ILogger<UserController> _logger; // Include a logger
 
-    public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    public UserController(
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        ILogger<UserController> logger) 
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _logger = logger;
     }
+
 
     // ********** Registration **********
     [HttpGet]
     public IActionResult Register()
     {
-        return View();
+        return View(new RegisterViewModel()); // Initialize an empty ViewModel for the GET request
     }
 
     [HttpPost]
@@ -26,40 +32,54 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser
+            {
+                UserName = model.Email, // Correct property name
+                Email = model.Email
+            };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
+                _logger.LogInformation("User created a new account with password."); // Log the success
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("index", "home");
+                return RedirectToAction("Index", "Home");
             }
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
+                _logger.LogWarning("User registration failed: {Error}", error.Description); // Log the error
             }
         }
+        else
+        {
+            _logger.LogWarning("Registration model state is not valid.");
+        }
 
-        // If we got this far, something failed, redisplay form
+        // If we got this far, something failed, redisplay form with the provided model
         return View(model);
     }
 
+
+
     // ********** Login **********
     [HttpGet]
-    public IActionResult Login(string returnUrl = null)
+    public IActionResult Login(string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(string username, string password, LoginViewModel model, string returnUrl = null)
+    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
 
         if (ModelState.IsValid)
         {
-            var result = await _signInManager.PasswordSignInAsync(username, password, false, false);
+            // Use Email for login
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+
             if (result.Succeeded)
             {
                 return RedirectToLocal(returnUrl);
@@ -67,13 +87,12 @@ public class AccountController : Controller
             else
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return View(model);
             }
         }
 
-        // If we got this far, something failed, redisplay form
         return View(model);
     }
+
 
     // ********** Logout **********
     [HttpPost]
