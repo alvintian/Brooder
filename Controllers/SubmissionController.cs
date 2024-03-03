@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace CookAlongAcademy.Controllers
+namespace Brooder.Controllers
 {
     public class SubmissionController : Controller
     {

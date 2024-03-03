@@ -1,5 +1,5 @@
-using CookAlongAcademy.DataAccess;
-using CookAlongAcademy.Models;
+using Brooder.DataAccess;
+using Brooder.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +8,7 @@ builder.Logging.AddConsole();
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("CookAlongConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("BrooderConnection")));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -33,6 +33,7 @@ app.UseRouting();
 app.UseAuthentication(); // This is needed to enable authentication.
 app.UseAuthorization();
 
+// Define the default route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

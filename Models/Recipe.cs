@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CookAlongAcademy.Models
+namespace Brooder.Models
 {
     public class Recipe
     {

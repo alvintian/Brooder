@@ -1,8 +1,8 @@
-﻿using CookAlongAcademy.Models;
+﻿using Brooder.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace CookAlongAcademy.DataAccess
+namespace Brooder.DataAccess
 {
     public class UserDAO
     {

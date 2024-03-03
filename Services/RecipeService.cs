@@ -1,7 +1,7 @@
-﻿using CookAlongAcademy.DataAccess;
-using CookAlongAcademy.Models;
+﻿using Brooder.DataAccess;
+using Brooder.Models;
 
-namespace CookAlongAcademy.Services
+namespace Brooder.Services
 {
     public class RecipeService
     {

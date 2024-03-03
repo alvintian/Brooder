@@ -2,7 +2,47 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center" style="padding: 50px;">
+    <h1 class="display-4">Welcome to Brooder</h1>
+    <p>This is the place to meet new people!</p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <p>Welcome back, @User.Identity.Name!</p>
+        <a class="btn btn-primary" href="@Url.Action("Dashboard", "Home")">Go to Dashboard</a>
+    }
+    else
+    {
+        <p>Get started by logging in or creating an account.</p>
+        <a class="btn btn-success" href="@Url.Action("Login", "User")">Login</a>
+        <a class="btn btn-info" href="@Url.Action("Register", "User")">Sign Up</a>
+    }
 </div>
+
+<style>
+    body {
+        background-color: #ffebee;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .btn {
+        margin: 5px;
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        background-color: #ff5252;
+        border: none;
+    }
+
+    .btn-success {
+        background-color: #ff4081;
+        border: none;
+    }
+
+    .btn-info {
+        background-color: #e040fb;
+        border: none;
+    }
+</style>

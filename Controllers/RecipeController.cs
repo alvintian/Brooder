@@ -1,8 +1,8 @@
-﻿using CookAlongAcademy.Models;
-using CookAlongAcademy.Services;
+﻿using Brooder.Models;
+using Brooder.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CookAlongAcademy.Controllers
+namespace Brooder.Controllers
 {
     public class RecipeController : Controller
     {
@@ -19,7 +19,7 @@ namespace CookAlongAcademy.Controllers
 
         [HttpPost]
         [HttpPost]
-        public async Task<IActionResult> UploadRecipe(IFormFile file)
+        public IActionResult UploadRecipe(IFormFile file)
         {
             if (file != null && file.Length > 0)
             {

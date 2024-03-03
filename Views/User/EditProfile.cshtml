@@ -1,0 +1,43 @@
+﻿@model Brooder.Models.EditProfileViewModel
+
+@{
+    ViewData["Title"] = "Edit Profile";
+    var profileImageUrl = Model.ProfileImagePath != null ? Url.Content($"~/uploads/{Model.ProfileImagePath}") : Url.Content("~/images/default_profile.jpg"); // Default image if none is uploaded
+}
+
+<h1>Edit Your Profile</h1>
+
+<form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+    <div class="text-center">
+        <img src="@profileImageUrl" alt="Profile Picture" style="max-width: 300px;" />
+    </div>
+
+    @* Profile form fields *@
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Age">Age</label>
+        <input asp-for="Age" class="form-control" type="number" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Bio">Bio</label>
+        <textarea asp-for="Bio" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="BloodType">Blood Type</label>
+        <select asp-for="BloodType" asp-items="@Html.GetEnumSelectList<BloodType>()" class="form-control"></select>
+
+    </div>
+    <div class="form-group">
+        <label asp-for="ProfileImage">Change Profile Image</label>
+        <input asp-for="ProfileImage" type="file" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+@section Scripts {
+    @* Scripts section if you have any specific scripts *@
+}

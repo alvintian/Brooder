@@ -4,41 +4,33 @@
 
 namespace Brooder.Migrations
 {
-    public partial class MakeNamesOptional : Migration
+    public partial class AddBloodTypeToUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "LastName",
+                name: "Name",
                 table: "AspNetUsers",
                 type: "TEXT",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldType: "TEXT");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "FirstName",
+            migrationBuilder.AddColumn<string>(
+                name: "BloodType",
                 table: "AspNetUsers",
                 type: "TEXT",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "TEXT");
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "LastName",
-                table: "AspNetUsers",
-                type: "TEXT",
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "TEXT",
-                oldNullable: true);
+            migrationBuilder.DropColumn(
+                name: "BloodType",
+                table: "AspNetUsers");
 
             migrationBuilder.AlterColumn<string>(
-                name: "FirstName",
+                name: "Name",
                 table: "AspNetUsers",
                 type: "TEXT",
                 nullable: false,

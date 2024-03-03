@@ -1,6 +1,6 @@
-﻿using CookAlongAcademy.Models;
+﻿using Brooder.Models;
 
-namespace CookAlongAcademy.DataAccess
+namespace Brooder.DataAccess
 {
     public class SubmissionDAO
     {

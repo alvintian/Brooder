@@ -1,22 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using CookAlongAcademy.Models;
+using Brooder.Models;
 using Microsoft.AspNetCore.Identity;
-using CookAlongAcademy.Controllers;
+using Brooder.Controllers;
 
 public class UserController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly ILogger<UserController> _logger; // Include a logger
+    private readonly ILogger<UserController> _logger;
+    private readonly IWebHostEnvironment _hostingEnvironment;
 
     public UserController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
-        ILogger<UserController> logger) 
+        ILogger<UserController> logger,
+        IWebHostEnvironment hostingEnvironment) // Add IWebHostEnvironment to the constructor
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _logger = logger;
+        _hostingEnvironment = hostingEnvironment; // Initialize the IWebHostEnvironment
     }
 
 
@@ -60,8 +63,6 @@ public class UserController : Controller
         return View(model);
     }
 
-
-
     // ********** Login **********
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
@@ -93,7 +94,6 @@ public class UserController : Controller
         return View(model);
     }
 
-
     // ********** Logout **********
     [HttpPost]
     public async Task<IActionResult> Logout()
@@ -113,4 +113,100 @@ public class UserController : Controller
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
+    // GET: User/EditProfile
+    public async Task<IActionResult> EditProfile()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login"); // Redirect to the login page if the user is not logged in
+        }
+
+        // Create and return a view model for the user's profile populated with existing data
+        var model = new EditProfileViewModel
+        {
+            Name = user.Name,
+            Age = user.Age,
+            Bio = user.Bio,
+            ProfileImagePath = user.ProfileImagePath,
+            BloodType = user.BloodType.ToString()
+
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditProfile(EditProfileViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Explicitly update the user's properties with the form values
+            user.Name = model.Name; // Assuming there's a Name property
+            user.Age = model.Age; // Assuming there's an Age property
+            user.Bio = model.Bio; // Assuming there's a Bio property
+
+            // Parse the BloodType from the model and update the user
+            if (Enum.TryParse<BloodType>(model.BloodType, out BloodType parsedBloodType))
+            {
+                user.BloodType = parsedBloodType;
+            }
+            else
+            {
+                // If parsing fails, add a model error and return to the form
+                ModelState.AddModelError(nameof(model.BloodType), "Invalid blood type.");
+                return View(model);
+            }
+
+            // Handle the image upload
+            if (model.ProfileImage != null && model.ProfileImage.Length > 0)
+            {
+                var uploadsDir = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadsDir))
+                {
+                    Directory.CreateDirectory(uploadsDir);
+                }
+
+                var fileName = Path.GetFileName(model.ProfileImage.FileName);
+                var uniqueFileName = $"{Guid.NewGuid()}_{fileName}";
+                var filePath = Path.Combine(uploadsDir, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.ProfileImage.CopyToAsync(fileStream);
+                }
+
+                // Update the path to the user's profile image in your database
+                user.ProfileImagePath = uniqueFileName; // This should be just the file name if it's saved directly under wwwroot/uploads
+            }
+
+            // Attempt to update the user in the database
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Dashboard", "Home");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+        }
+
+        // If we're here, something went wrong, redisplay the form
+        return View(model);
+    }
+
+
+
+
+    // Other methods...
 }

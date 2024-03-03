@@ -1,12 +1,12 @@
-﻿using CookAlongAcademy.Models;
+﻿using Brooder.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Collections.Generic; // Make sure you include this if you're using Lists
+using System.Collections.Generic; // Necessary for using Lists
 
-namespace CookAlongAcademy.Controllers
+namespace Brooder.Controllers
 {
     public class HomeController : Controller
     {
@@ -21,22 +21,18 @@ namespace CookAlongAcademy.Controllers
             _signInManager = signInManager;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            if (_signInManager.IsSignedIn(User))
-            {
-                return RedirectToAction("Dashboard");
-            }
-            else
-            {
-                return RedirectToAction("Register", "User");
-            }
+            // Simply return the View without automatic redirection
+            // You can decide in the View itself to show different content based on whether the user is signed in or not
+            return View();
         }
 
         public async Task<IActionResult> Dashboard()
         {
             if (!_signInManager.IsSignedIn(User))
             {
+                // If the user is not signed in, redirect them to the login page
                 return RedirectToAction("Login", "User");
             }
 
@@ -49,36 +45,29 @@ namespace CookAlongAcademy.Controllers
 
             var model = new DashboardViewModel
             {
-                User = currentUser, // currentUser is cast to ApplicationUser
-                Recipes = await GetRecipesForUser(currentUser)
+                User = currentUser,
+                Recipes = await GetRecipesForUser(currentUser) // Ensure this method is implemented and returns meaningful data
             };
 
             return View(model);
         }
 
-        // Implement this method according to your data access logic
         private async Task<IEnumerable<Recipe>> GetRecipesForUser(ApplicationUser user)
         {
-            // Your logic to fetch recipes for the given user
-            // Example:
-            // return await _recipeService.GetRecipesByUserId(user.Id);
-            return new List<Recipe>(); // Placeholder return
+            // Placeholder implementation - replace with your actual data access logic
+            return new List<Recipe>();
         }
 
-
-
-        // Add other actions like Privacy if necessary
+        // Other actions remain unchanged
         public IActionResult Privacy()
         {
             return View();
         }
 
-        // Add error handling if necessary
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
     }
 }

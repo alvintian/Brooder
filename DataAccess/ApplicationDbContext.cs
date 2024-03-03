@@ -1,8 +1,8 @@
-﻿using CookAlongAcademy.Models;
+﻿using Brooder.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace CookAlongAcademy.DataAccess
+namespace Brooder.DataAccess
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

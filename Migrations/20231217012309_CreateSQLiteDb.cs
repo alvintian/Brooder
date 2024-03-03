@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CookAlongAcademy.Migrations
+namespace Brooder.Migrations
 {
     public partial class CreateSQLiteDb : Migration
     {

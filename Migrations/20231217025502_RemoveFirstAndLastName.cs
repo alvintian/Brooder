@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace CookAlongAcademy.Migrations
+namespace Brooder.Migrations
 {
     public partial class RemoveFirstAndLastName : Migration
     {

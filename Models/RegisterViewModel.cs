@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CookAlongAcademy.Models
+namespace Brooder.Models
 {
     public class RegisterViewModel
     {

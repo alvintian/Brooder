@@ -1,55 +1,79 @@
-﻿@model CookAlongAcademy.Models.DashboardViewModel
+﻿@model Brooder.Models.DashboardViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
+    var profileImagePath = Model.User.ProfileImagePath ?? "default_profile_picture_path_here.jpg"; // Provide a default image path if none exists
+    var profileImageUrl = Url.Content($"~/uploads/{profileImagePath}"); // Adjust the path as necessary
 }
 
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-            <div class="position-sticky pt-3">
-                <ul class="nav flex-column">
-                    <!-- Sidebar content here -->
-                </ul>
-            </div>
-        </nav>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 20px;
+        }
 
-        <!-- Main content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Welcome, @(Model.User != null ? Model.User.UserName : "Guest")!</h1>
-                <p id="current-time" class="lead"></p>
-            </div>
+        .profile-card {
+            max-width: 300px;
+            margin: auto;
+            background: #f9f9f9;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
 
-            <div class="btn-group" role="group" aria-label="Basic example">
+            .profile-card img {
+                max-width: 100%;
+                border-radius: 10px;
+            }
+
+        .action-buttons {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center">
+            <h1>Welcome, @(Model.User != null ? Model.User.UserName : "Guest")!</h1>
+            <p id="current-time" class="lead"></p>
+        </div>
+        <div class="profile-card text-center">
+            <img src="@profileImageUrl" alt="Profile Picture">
+            <h2>@Model.User.Name, @Model.User.Age</h2> <!-- Assuming Name and Age are directly accessible -->
+            <p>@Model.User.Bio</p> <!-- Displaying the bio -->
+            <p>Blood Type: @Model.User.BloodType</p>
+            <div class="action-buttons">
+                <!-- Action buttons can be personalized or removed based on the functionality you want to provide -->
+                <button class="btn btn-success">Like</button>
+                <button class="btn btn-secondary">Dislike</button>
+            </div>
+        </div>
+        <div class="logout-button text-center" style="margin-top: 20px;">
             <form asp-controller="User" asp-action="Logout" method="post">
                 <button type="submit" class="btn btn-danger">Logout</button>
             </form>
-            </div>
-
-            <!-- Add more dashboard widgets here -->
-
-            <!-- Render the RecipeList partial view here -->
-            <partial name="_RecipeList" model="Model.Recipes" />
-            <!-- Additional content can be added here -->
-        </main>
+        </div>
     </div>
-</div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    @section Scripts {
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            function updateClock() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString();
+                document.getElementById('current-time').textContent = timeString;
+            }
+
+            setInterval(updateClock, 1000);
+            updateClock(); // Initialize clock
+        </script>
     }
-
-    <script>
-        function updateClock() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            document.getElementById('current-time').textContent = timeString;
-        }
-
-        setInterval(updateClock, 1000);
-        updateClock(); // initialize clock
-    </script>
-}
+</body>
+</html>

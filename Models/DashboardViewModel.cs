@@ -1,4 +1,4 @@
-﻿namespace CookAlongAcademy.Models
+﻿namespace Brooder.Models
 {
     public class DashboardViewModel
     {
